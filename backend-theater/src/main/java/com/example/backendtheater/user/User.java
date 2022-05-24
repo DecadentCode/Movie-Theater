@@ -1,11 +1,9 @@
 package com.example.backendtheater.user;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table
 public class User {
 
     @Id
@@ -13,9 +11,8 @@ public class User {
     private Integer id;
 
     @Column(nullable = false, unique = true)
-    private String username;
-    @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
@@ -23,20 +20,14 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    private String role = "USER";
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {
@@ -71,4 +62,23 @@ public class User {
         this.lastName = lastName;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }
