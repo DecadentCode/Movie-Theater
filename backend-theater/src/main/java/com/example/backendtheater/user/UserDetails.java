@@ -1,33 +1,32 @@
-package com.example.theaterbackend.models;
+package com.example.backendtheater.user;
 
-import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
-public class MyUserDetails implements UserDetails {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-    private String username;
-    private String password;
+public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+
+    public UserDetails(){
+    }
+
+    private String firstName;
+    private String lastName;
     private String email;
+    private String password;
     private List<GrantedAuthority> authorities;
 
-    public MyUserDetails(User user){
-        this.username = user.getUsername();
-        this.password = user.getPassword();
+    public UserDetails(User user){
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.email = user.getEmail();
+        this.password = user.getPassword();
         this.authorities = Arrays.stream(
-                user.getRoles().split(","))
+                        user.getRole().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -41,7 +40,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -63,4 +62,7 @@ public class MyUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
+
 }
