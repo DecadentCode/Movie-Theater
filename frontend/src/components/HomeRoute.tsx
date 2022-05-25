@@ -1,6 +1,21 @@
+import { useEffect, useState } from 'react';
+import Movie from '../models/Movie';import { getTrendingMovies } from "../services/MovieService";
 import './HomeRoute.css'
+import MovieObject from './MovieObject';
 
 const HomeRoute = () => {
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    getTrendingMovies().then((response) => {
+      setMovies(response.results);
+    });
+
+    fetch('/api/movies')
+      .then(res => res.json())
+      .then(data => setMovies(data));
+  }, []);
+
   return (
     <div className='HomeRoute'>
         <h1>
@@ -12,7 +27,11 @@ const HomeRoute = () => {
         <h3>
             NOW PLAYING
         </h3>
-        
+        <ul>
+        {movies.map((item) => (
+          <MovieObject key={item.id} movie={item} />
+        ))}
+      </ul>
     </div>
   )
 };
