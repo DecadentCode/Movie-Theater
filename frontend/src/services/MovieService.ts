@@ -1,7 +1,7 @@
 import axios from "axios";
 
 import MovieResponse from "../models/MovieResponse";
-import SingleMovie from "../models/SingleMovieResponse";
+import SingleMovie from "../models/SingleMovie";
 
 const key: string | undefined = process.env.REACT_APP_MOVIE_KEY || "";
 
@@ -20,11 +20,11 @@ export const getTrendingMovies = (): Promise<MovieResponse> => {
 
 // function to get movie details
 export const getMovieById = (id: string): Promise<SingleMovie> => {
-    return axios
-      .get(`https://api.themoviedb.org/3/movie/${encodeURIComponent(id)}`, {
-        params: { api_key: key },
-      })
-      .then((response) => {
-        return response.data;
-      });
-  };
+  return axios
+    .get(`https://api.themoviedb.org/3/movie/${encodeURIComponent(id)}`, {
+      params: { api_key: key },
+    })
+    .then((response) => {
+      return response.data;
+    });
+};
