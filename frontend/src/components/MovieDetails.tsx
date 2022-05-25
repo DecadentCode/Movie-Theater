@@ -14,10 +14,9 @@ const MovieDetails = () => {
   let id = useParams().id!;
 
   useEffect(() => {
-    // TODO: fetch movie by id
-    // getMovieById(id).then((response) => {
-    //   setMovie(response);
-    // });
+    getMovieById(id).then((response) => {
+      setMovie(response);
+    });
   }, [id]);
 
   const movieRuntime: number | undefined = movie?.runtime;
