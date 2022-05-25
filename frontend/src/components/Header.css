@@ -1,4 +1,17 @@
 .Header {
-    background-color: #161571;
-    border-bottom: solid #441643 6px;
+  background-color: #161571;
+  border-bottom: solid #441643 6px;
+  height: 50px;
+}
+.Header .navLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+}
+.Header .navLink {
+  text-decoration: none;
+  color: cornsilk;
+  font-size: 1.5em;
+  margin: 10px;
 }
