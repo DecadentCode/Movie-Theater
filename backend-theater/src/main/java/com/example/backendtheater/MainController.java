@@ -9,8 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-
 @Controller
 public class MainController {
 
@@ -28,7 +26,7 @@ public class MainController {
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
 
-        return "register";
+        return "signup_form";
     }
 
     @PostMapping("/process_register")
@@ -42,12 +40,13 @@ public class MainController {
         return "register_success";
     }
 
-    @GetMapping("/users")
-    public String listUsers(Model model) {
-        List<User> listUsers = userRepo.findAll();
-        model.addAttribute("listUsers", listUsers);
-
-        return "users";
+    @GetMapping("/user")
+    public String home() {
+        return "user";
     }
 
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
 }
