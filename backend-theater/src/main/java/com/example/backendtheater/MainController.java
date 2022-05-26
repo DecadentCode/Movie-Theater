@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -70,7 +71,7 @@ public class MainController {
 
     //TODO send current user ID in purchase data
     @GetMapping("/confirmpurchase")
-    public String confirmPurchase(@RequestParam String id) {
+    public String confirmPurchase(@RequestParam String id, @CurrentSecurityContext(expression="authentication?.name") String userEmail) {
         try {
             String encoding = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
             var client = HttpClient.newHttpClient();
@@ -91,20 +92,20 @@ public class MainController {
 
             if(!validPurchase(jsonObject)) {
                 return purchaseError();
+            } else {
+                return completePurchase(userEmail);
             }
         } catch(Exception e) {
             e.printStackTrace();
             return purchaseError();
         }
-
-        return completePurchase();
     }
 
-    private String completePurchase() {
+    private String completePurchase(String email) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("gensparkmovies@gmail.com");
-            message.setTo("duncan@clotfelter.net");
+            message.setTo(email);
             message.setSubject("Thank you for your purchase!");
             message.setText("Don't forget to collect your free popcorn! It's on the house!");
             BackendTheaterApplication.getJavaMailSender().send(message);
