@@ -1,4 +1,5 @@
 import { FormEvent } from "react";
+import { Link } from "react-router-dom";
 import "./SignIn.css";
 
 const SignIn = () => {
@@ -8,14 +9,14 @@ const SignIn = () => {
     const user = {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
-      confirmPassword: formData.get("confirmPassword") as string,
     };
+    console.log(user);
   };
 
   return (
     <div className="SignIn">
-      <h1>Sign In</h1>
       <form onSubmit={submitHandler}>
+        <h1>Sign In</h1>
         <label htmlFor="email">Email</label>
         <input type="email" id="email" required />
         <label htmlFor="password">Password</label>
@@ -24,14 +25,9 @@ const SignIn = () => {
       </form>
 
       <h2>Don't have an account?</h2>
-      <button
-        id="SignUp"
-        onClick={() => {
-          window.location.href = "/signup";
-        }}
-      >
+      <Link to="/signup" id="SignUp">
         Sign Up
-      </button>
+      </Link>
     </div>
   );
 };
