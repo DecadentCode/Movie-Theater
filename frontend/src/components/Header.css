@@ -1,4 +1,24 @@
 .Header {
-    background-color: #161571;
-    border-bottom: solid #441643 6px;
+  background-color: #161571;
+  border-bottom: solid #441643 6px;
+  height: 50px;
+}
+.Header .navLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+}
+.Header .navLink {
+  text-decoration: none;
+  color: cornsilk;
+  font-size: 1.5em;
+  margin: 10px;
+}
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 200, "opsz" 32;
+}
+.material-symbols-outlined:hover {
+  font-variation-settings: "FILL" 1, "wght" 300, "GRAD" 200, "opsz" 32;
+  cursor: pointer;
 }

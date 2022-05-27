@@ -1,33 +1,30 @@
-.MovieObjectContainer,
 .MovieObject {
   display: flex;
   flex-direction: column;
   align-items: center;
-  list-style: none;
-}
-.MovieObject {
-  font-size: 24px;
   background-color: #161571;
-  margin: 12px;
+  margin: 4px;
   padding: 12px;
   border: solid #441643 4px;
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 15px;
-  width: 200px;
+  width: 225px;
   height: 100%;
 }
 .MovieObject p {
   display: flex;
   flex-wrap: wrap;
   text-align: center;
-  max-width: 200px;
+  max-width: 225px;
 }
 .MovieObject .title {
-  font-size: 20px;
+  font-family: "Limelight";
+  font-size: 16px;
+  margin: 4px;
 }
 .MovieObject img {
   margin-top: auto;
-  width: 200px;
+  width: 225px;
 }
 .MovieObject img:hover {
   cursor: pointer;

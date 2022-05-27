@@ -1,0 +1,35 @@
+.HomeRoute {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Limelight";
+  background-color: #652026;
+}
+.HomeRoute h1 {
+  font-size: 42px;
+  margin: 0;
+}
+
+.HomeCompContainer {
+  background-color: #701614;
+  border: solid #b8905a 6px;
+  border-radius: 4px;
+  margin-top: 6px;
+}
+.HomeRoute h2 {
+  font-size: 32px;
+  margin: 0;
+}
+.HomeRoute ul {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0px;
+}
+.HomeRoute li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style: none;
+}
