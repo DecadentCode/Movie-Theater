@@ -1,26 +1,27 @@
 package com.example.backendtheater;
 
 import com.example.backendtheater.user.User;
+import com.example.backendtheater.user.UserDetailsService;
 import com.example.backendtheater.user.UserRepository;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Base64;
+import java.util.Optional;
 
 @Controller
 public class MainController {
@@ -53,10 +54,23 @@ public class MainController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-
+        new EmailSender(user).sendConfirmation();
         userRepo.save(user);
-
         return "register_success";
+    }
+
+    @PutMapping(value = "/confirm_email/{id}")
+    public boolean confirmUserEmail(@PathVariable int id) {
+        User user;
+        Optional<User> userFound = userRepo.findById(id);
+        if (userFound.isPresent()) {
+            user = userFound.get();
+        } else {
+            return false;
+        }
+        user.setEmailConfirmed(true);
+        userRepo.save(user);
+        return true;
     }
 
     @GetMapping("/user")
