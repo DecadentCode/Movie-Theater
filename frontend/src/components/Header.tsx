@@ -15,6 +15,10 @@ const Header = () => {
         <Link to="/" className="navLink">
           Home
         </Link>
+        <Link to="/store" className="navLink">
+          Store
+        </Link>
+
         {isLoggedIn ? (
           <>
             <Link to="/profile" className="navLink">
@@ -29,6 +33,9 @@ const Header = () => {
             Sign In
           </Link>
         )}
+        <Link to="/cart" className="navLink">
+          <span className="material-symbols-outlined">local_mall</span>
+        </Link>
       </nav>
     </div>
   );
