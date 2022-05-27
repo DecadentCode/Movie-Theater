@@ -21,6 +21,7 @@ public class User {
     private String lastName;
 
     private String role = "USER";
+    private boolean emailConfirmed = false;
 
     public Integer getId() {
         return id;
@@ -70,6 +71,14 @@ public class User {
         this.role = role;
     }
 
+    public boolean isEmailConfirmed() {
+        return emailConfirmed;
+    }
+
+    public void setEmailConfirmed(boolean emailConfirmed) {
+        this.emailConfirmed = emailConfirmed;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -79,6 +88,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", role='" + role + '\'' +
+                ", emailConfirmed='" + String.valueOf(emailConfirmed) + '\'' +
                 '}';
     }
 }
