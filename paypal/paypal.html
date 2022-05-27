@@ -9,7 +9,6 @@
     <div id="paypal-button-container"></div>
     <script>
       paypal.Buttons({
-        // Sets up the transaction when a payment button is clicked
         createOrder: (data, actions) => {
           return actions.order.create({
             purchase_units: [{
@@ -19,13 +18,10 @@
             }]
           });
         },
-        // Finalize the transaction after payer approval
         onApprove: (data, actions) => {
           return actions.order.capture().then(function(orderData) {
-            // Successful capture! For dev/demo purposes:
-            //console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
             const transaction = orderData.purchase_units[0].payments.captures[0];
-            actions.redirect('http://localhost:8080/confirmpurchase?id='+transaction.id);
+            actions.redirect('http://localhost:9998/confirmpurchase?id='+transaction.id);
           });
         }
       }).render('#paypal-button-container');
