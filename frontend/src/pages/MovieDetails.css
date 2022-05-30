@@ -1,0 +1,32 @@
+.MovieDetails {
+  display: flex;
+  justify-content: space-around;
+}
+.MovieObjectContainer {
+  display: flex;
+  flex: 2;
+}
+
+.MovieDescriptionContainer {
+  display: flex;
+  border: 2px solid #161571;
+  border-radius: 6px;
+  margin: 16px;
+  padding: 16px;
+}
+.MovieDetails #description {
+  display: flex;
+  font-family: "Open Sans", sans-serif;
+  font-size: 26px;
+  color: cornsilk;
+  flex: 1;
+}
+
+@media only screen and (max-width: 800px) {
+  .MovieDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
