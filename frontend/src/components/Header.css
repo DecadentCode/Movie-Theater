@@ -28,11 +28,18 @@
 }
 
 #LoginImage {
-  height: 40px;
-  background-image: url("https://i.imgur.com/XqQZQZL.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  height: 33px;
+  margin: 0px;
+  padding: 0px;
+}
+#signIn {
+  background-color: black;
+  border: 0px;
+  padding: 0px;
+  margin: 0px;
+}
+#signIn:hover {
+  cursor: pointer;
 }
 @media only screen and (max-width: 800px) {
 }

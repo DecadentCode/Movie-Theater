@@ -51,7 +51,6 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests(a -> a
                         .antMatchers("/", "/error", "/webjars/**", "/index.html").permitAll()
-                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
