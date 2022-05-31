@@ -15,8 +15,11 @@ const Header = () => {
         <Link to="/" className="navLink">
           Home
         </Link>
-        <Link to="/store" className="navLink">
+        {/* <Link to="/store" className="navLink">
           Store
+        </Link> */}
+        <Link to="/about" className="navLink">
+          About
         </Link>
 
         {isLoggedIn ? (
@@ -29,9 +32,12 @@ const Header = () => {
             </button>
           </>
         ) : (
-          <Link to="/signin" className="navLink">
-            Sign In
-          </Link>
+          <a href="/oauth2/authorization/github">
+            <img
+              id="LoginImage"
+              src="https://cloud.githubusercontent.com/assets/194400/11214293/4e309bf2-8d38-11e5-8d46-b347b2bd242e.png"
+            ></img>
+          </a>
         )}
         <Link to="/cart" className="navLink">
           <span className="material-symbols-outlined">local_mall</span>

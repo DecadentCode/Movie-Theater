@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
-import PayPal from "../components/PayPal";
+import PayPalButton from "../components/PaypalButton";
 import CartContext from "../context/CartContext";
 import "./Cart.css";
 
 const Cart = () => {
-  const { cart } = useContext(CartContext);
+  const { cart, cartTotal } = useContext(CartContext);
   const [checkout, setCheckout] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ const Cart = () => {
       </ul>
 
       {checkout ? (
-        <PayPal />
+        <PayPalButton id={cart[0].name} />
       ) : (
         <button
           onClick={() => {
