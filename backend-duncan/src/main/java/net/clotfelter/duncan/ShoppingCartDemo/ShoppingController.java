@@ -109,7 +109,7 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
     //TODO send current user ID in purchase data
     @CrossOrigin
     @GetMapping("/api/confirmpurchase")
-    public String confirmPurchase(@RequestParam String payment, @RequestParam int show) {
+    public String confirmPurchase(@RequestParam String payment, @RequestParam String show) {
         try {
             String encoding = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
             var client = HttpClient.newHttpClient();
@@ -139,14 +139,14 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         }
     }
 
-    private String completePurchase(String json, String paymentId, int filmId, String email) {
+    private String completePurchase(String json, String paymentId, String filmId, String email) {
         var session = HibernateAnnotationUtil.getSessionFactory().getCurrentSession();
         var tx = session.beginTransaction();
-        Film toWatch = session.get(Film.class, filmId);
+        //Film toWatch = session.get(Film.class, filmId);
 
         Ticket soldTicket = new Ticket();
         soldTicket.setId(paymentId);
-        soldTicket.setFilm(toWatch);
+        soldTicket.setFilm(filmId);
         soldTicket.setUnits(1);
         soldTicket.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
         soldTicket.setPurchase(json);

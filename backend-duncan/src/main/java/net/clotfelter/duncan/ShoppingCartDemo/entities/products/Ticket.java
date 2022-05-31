@@ -17,8 +17,8 @@ public class Ticket {
     @Column(name="units")
     int units;
 
-    @OneToOne
-    Film film;
+    @Column(name="film")
+    String film;
 
     @Column(columnDefinition = "TEXT")
     String purchase;
