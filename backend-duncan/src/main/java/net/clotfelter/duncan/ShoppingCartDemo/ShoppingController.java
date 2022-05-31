@@ -177,6 +177,7 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         return "We are sorry, but there was an issue validating your purchase. Please try again, or contact us <a href='http://localhost:8080/contactus'>here</a>";
     }
 
+    /*
     @GetMapping("/productsbyid")
     public List<Product> getProductsById(@RequestParam int id) {
         try (var session = HibernateAnnotationUtil.getSessionFactory().getCurrentSession()) {
@@ -263,5 +264,5 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         session.delete(toDelete);
         tx.commit();
         System.out.println("Successfully deleted cart: "+u.getCart());
-    }
+    }*/
 }
