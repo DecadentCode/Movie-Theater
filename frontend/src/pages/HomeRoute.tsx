@@ -7,15 +7,12 @@ import "./HomeRoute.css";
 
 const HomeRoute = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [shownMovies, setShownMovies] = useState<number>(12);
 
   useEffect(() => {
     getTrendingMovies().then((response) => {
       setMovies(response.results);
     });
-
-    // fetch("/api/movies")
-    //   .then((res) => res.json())
-    //   .then((data) => setMovies(data));
   }, []);
 
   return (
@@ -25,19 +22,24 @@ const HomeRoute = () => {
         We are a small, family-owned, community-based movie theater. Now 80%
         blob free!
       </p>
-      <div className="HomeCompContainer">
+      {/* <div className="HomeCompContainer">
         <h2>MERCH</h2>
-      </div>
+      </div> */}
       <div className="HomeCompContainer">
         <h2>NOW PLAYING</h2>
         <ul>
-          {movies.map((item) => (
+          {movies.slice(0, shownMovies).map((item) => (
             <li key={item.id}>
               <MovieObject movie={item} />
               <Tickets movie={item} />
             </li>
           ))}
         </ul>
+        {shownMovies < 20 && (
+          <button onClick={() => setShownMovies(shownMovies + 6)}>
+            Show More
+          </button>
+        )}
       </div>
     </div>
   );

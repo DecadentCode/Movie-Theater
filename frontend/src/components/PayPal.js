@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import "./PayPal.css";
 
 export default function Paypal() {
   const paypal = useRef();
@@ -14,7 +15,8 @@ export default function Paypal() {
                 description: "Movie Tickets (test)",
                 amount: {
                   currency_code: "USD",
-                  value: 5.00,
+                  // value: `${totalCost.toPrecision(2)}`,
+                  value: "0.01",
                 },
               },
             ],
