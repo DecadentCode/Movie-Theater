@@ -94,9 +94,7 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
 
     private String[] getTicketData(Ticket t) {
         return new String[] {
-                t.getFilm().getName(),
-                t.getFilm().getShowTime(),
-                t.getFilm().getDescription(),
+                t.getFilm(),
                 String.valueOf(t.getUnits())
         };
     }
