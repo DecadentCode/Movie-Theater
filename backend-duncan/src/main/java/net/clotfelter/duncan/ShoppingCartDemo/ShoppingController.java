@@ -50,8 +50,8 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         // @formatter:off
         http
                 .authorizeRequests(a -> a
-                        .antMatchers("/", "/error", "/webjars/**", "/index.html").permitAll()
-                        .anyRequest().authenticated()
+                        .antMatchers("/", "/*", "/error", "/webjars/**", "/index.html").permitAll()
+                        //.anyRequest().authenticated()
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -60,13 +60,8 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         // @formatter:on
     }
 
-//    @RequestMapping("/")
-//    public String test(HttpServletResponse httpResponse) throws Exception {
-//        httpResponse.sendRedirect("/");
-//        return "hey";
-//    }
-
-    @CrossOrigin
+    //Legacy
+    @Deprecated
     @GetMapping("/api")
     public String mainPage() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -76,7 +71,6 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         return "-1";
     }
 
-    @CrossOrigin
     @GetMapping("/api/myfilms")
     public List getUserTickets() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -100,14 +94,15 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
     }
 
     @GetMapping("/api/user")
-    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        return Collections.singletonMap("name", principal.getAttribute("name"));
+    public String user(@AuthenticationPrincipal OAuth2User principal) {
+        return principal == null ? "null" : principal.getAttributes().toString();
     }
 
     //TODO send current user ID in purchase data
     @CrossOrigin
     @GetMapping("/api/confirmpurchase")
-    public String confirmPurchase(@RequestParam String payment, @RequestParam String show) {
+    public String confirmPurchase(@RequestParam String payment, @RequestParam String show,
+                                  @RequestParam String time, @RequestParam int units, @AuthenticationPrincipal OAuth2User principal) {
         try {
             String encoding = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
             var client = HttpClient.newHttpClient();
@@ -126,10 +121,11 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
 
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
 
+            System.out.println((String)principal.getAttribute("email"));
             if(!validPurchase(jsonObject)) {
                 return purchaseError();
             } else {
-                return completePurchase(response.body(), payment, show, "duncan@clotfelter.net");
+                return completePurchase(response.body(), payment, show, principal.getAttribute("email"));
             }
         } catch(Exception e) {
             e.printStackTrace();
