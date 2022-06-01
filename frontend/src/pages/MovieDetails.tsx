@@ -33,7 +33,6 @@ const MovieDetails = () => {
   return (
     <div className="MovieDetails">
       <MovieObject movie={movie!} />
-      <Tickets movie={movie} />
 
       <div className="MovieDescriptionContainer">
         <p id="description">

@@ -17,7 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/edit").permitAll()
                 .antMatchers("/ticket").permitAll()
                 .antMatchers("/purchase").permitAll()
-                .anyRequest().authenticated()
                 .and().oauth2Login();
     }
 

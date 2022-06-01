@@ -31,12 +31,14 @@ const HomeRoute = () => {
           {movies.slice(0, shownMovies).map((item) => (
             <li key={item.id}>
               <MovieObject movie={item} />
-              <Tickets movie={item} />
             </li>
           ))}
         </ul>
         {shownMovies < 20 && (
-          <button onClick={() => setShownMovies(shownMovies + 6)}>
+          <button
+            className="ShowMoreButton"
+            onClick={() => setShownMovies(shownMovies + 6)}
+          >
             Show More
           </button>
         )}

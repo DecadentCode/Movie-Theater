@@ -1,12 +1,16 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import CartContext from "../context/CartContext";
 import Movie from "../models/Movie";
 import "./MovieObject.css";
+import Tickets from "./Tickets";
 
 interface Props {
   movie: Movie;
 }
 
 const MovieObject = ({ movie }: Props) => {
+  const { isLoggedIn } = useContext(CartContext);
   const navigate = useNavigate();
 
   const seeDetails = (id: number): void => {
@@ -21,6 +25,7 @@ const MovieObject = ({ movie }: Props) => {
         alt="movie-poster"
         onClick={() => seeDetails(movie?.id)}
       />
+      {isLoggedIn && <Tickets movie={movie} />}
     </div>
   );
 };

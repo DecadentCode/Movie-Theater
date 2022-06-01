@@ -1,11 +1,13 @@
 import { ReactNode, useEffect, useState } from "react";
 import CartItem from "../models/CartItem";
+import { getProfile } from "../services/AccountService";
 import CartContext from "./CartContext";
 
 const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [cartTotalItems, setCartTotalItems] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const addToCart = (cartItem: CartItem) => {
     let alreadyInCart: boolean = false;
@@ -39,6 +41,10 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     console.log("new item added to cart");
     console.log(cart);
+    if (getProfile.name) {
+      setIsLoggedIn(true);
+      console.log(getProfile.name);
+    }
   }, [cart]);
 
   return (
@@ -47,9 +53,11 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         cart,
         cartTotal,
         cartTotalItems,
+        isLoggedIn,
         addToCart,
         removeFromCart,
         clearCart,
+        setIsLoggedIn,
       }}
     >
       {children}

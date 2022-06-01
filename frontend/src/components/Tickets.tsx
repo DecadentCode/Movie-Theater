@@ -85,13 +85,13 @@ const Tickets = ({ movie }: Props) => {
                   <form className="TicketsForm" onSubmit={submitHandler}>
                     <h2>Purchase Tickets for {showtime}</h2>
                     <label>
-                      Adult
+                      Adult - $10/each
                       <input
                         type="number"
                         name="adultqty"
                         className="TicketsQty"
                         id="AdultQty"
-                        defaultValue={0}
+                        defaultValue={1}
                         min={0}
                         autoComplete="off"
                       />
@@ -108,7 +108,7 @@ const Tickets = ({ movie }: Props) => {
       )}
 
       <button className="TicketsButton" onClick={ticketsHandler}>
-        Tickets
+        Buy Tickets
       </button>
     </div>
   );
