@@ -1,15 +1,16 @@
-import './PaypalButton.css'
+import './PaypalButton.css';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PaypalExpressBtn from 'react-paypal-express-checkout';
 
 const PaypalButton = (props) => {
     const navigate = useNavigate();
     const onSuccess = (payment) => {
-        /*console.log(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
+        console.log(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
         axios.get(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`)
             .then(res => {
                 alert(res.data);
-            })*/
+            })
         // window.location.assign(`http://localhost:8080/api/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
         navigate(`/checkout`);
     }
