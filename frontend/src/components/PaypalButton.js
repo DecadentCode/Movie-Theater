@@ -6,25 +6,26 @@ import { useContext } from 'react';
 import cartContext from '../context/CartContext';
 
 const PaypalButton = (props) => {
-    const { cartTotal, clearCart } = useContext(cartContext)
+    const { cart, cartTotal, clearCart } = useContext(cartContext)
     const baseURL = process.env.REACT_APP_API_URL || "";
     const finalCost = cartTotal.toFixed(2);
     const navigate = useNavigate();
     const onSuccess = (payment) => {
-        clearCart();
-        console.log(props.tickets)
+        const ticketArr = [];
+        for (const item of cart) {
+            ticketArr.push({
+                moviedbId: item.id,
+                units: item.qty,
+                showTime: item.name
+            });
+        }
+        console.log("ticketArr: ", ticketArr);
         axios.post(`${baseURL}/api/confirmpurchase`, {
             paymentId: payment['paymentID'],
             paymentDetails: JSON.stringify(payment),
-            tickets: JSON.stringify(props.tickets),
-            // tickets: [{
-            //     moviedbId: "ooga",
-            //     units: 2,
-            //     showTime: "12:00"
-            // }
-            // ]
+            tickets: ticketArr,
         })
-        // window.location.assign(`${baseURL}/api/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
+        clearCart();
         navigate(`/checkout`);
     }
 

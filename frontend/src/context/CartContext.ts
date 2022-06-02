@@ -8,7 +8,7 @@ export interface CartContext {
   cartTotalItems: number;
   isLoggedIn: boolean;
   purchaseHistory: string[];
-  addToCart: (item: CartItem) => void;
+  addToCart: (item: CartItem, qty: number) => void;
   removeFromCart: (item: CartItem) => void;
   clearCart: () => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;

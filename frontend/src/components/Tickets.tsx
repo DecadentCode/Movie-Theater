@@ -27,16 +27,19 @@ const Tickets = ({ movie }: Props) => {
     const adultqty: number = parseInt(formData.get("adultqty") as string);
 
     if (!adultqty) {
-      alert("Please select at least one ticket type");
+      alert("Please select at least one ticket");
       return;
     }
     adultqty &&
-      addToCart({
-        id: `adultTicket-${movie!.id}-${showtime}`,
-        name: `Adult Ticket (${movie!.title}) - ${showtime}`,
-        qty: adultqty,
-        price: 10,
-      });
+      addToCart(
+        {
+          id: `adultTicket-${movie!.id}-${showtime}`,
+          name: `Adult Ticket (${movie!.title}) - ${showtime}`,
+          price: 10,
+          qty: 1,
+        },
+        adultqty
+      );
 
     ticketsHandler();
   };

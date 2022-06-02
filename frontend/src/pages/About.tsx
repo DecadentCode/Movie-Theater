@@ -25,16 +25,19 @@ const About = () => {
         <h2>Andrea Godoshian</h2>
         {/* <img src={`./frontend/src/assets/andrea.jpg`} alt="Team member Andrea" /> */}
         <p>
-          Andrea is a software developer with a passion for creating web
-          applications.
+          Hello, world! In December 2021, I graduated with a 3.5 GPA from
+          Eastern Michigan University. During my final semester with EMU, I saw
+          a SheCodes advertisement on YouTube... I was hooked! After trying a
+          few different languages (ex. JavaScript, Python), I found success with
+          Java.
         </p>
       </div>
 
       <div className="AboutPerson">
         <h2>Duncan Clotfelter</h2>
         <p>
-          Duncan is a software developer with a passion for creating web
-          applications.
+          I'm Duncan Clotfelter, a programmer turned English teacher turned
+          programmer. I love languages of all forms!
         </p>
       </div>
     </div>

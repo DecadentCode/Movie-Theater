@@ -8,13 +8,14 @@ const PurchaseComplete = () => {
     <div className="PurchaseComplete">
       <h1>Thank you for your purchase!</h1>
       <h2>Your reciept:</h2>
-      <p>
+      <ul>
         {oldCart.map((item) => (
           <li key={item.id}>
-            {item.name} - x{item.qty} - ${item.price * item.qty}
+            {item.name} - ${item.price}
           </li>
         ))}
-      </p>
+      </ul>
+      <p>Total: ${oldCart.length * 10}</p>
     </div>
   );
 };

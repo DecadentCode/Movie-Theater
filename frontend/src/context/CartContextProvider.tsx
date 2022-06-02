@@ -11,33 +11,18 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [purchaseHistory, setPurchaseHistory] = useState<string[]>([]);
 
-  // const addToCart = (cartItem: CartItem) => {
-  //   let alreadyInCart: boolean = false;
-  //   cart.find((itemInCart, index) => {
-  //     if (itemInCart.id === cartItem.id) {
-  //       cart[index].qty += cartItem.qty;
-  //       cart[index].qty <= 0 && cart.splice(index, 1);
-  //       alreadyInCart = true;
-  //       return true;
-  //     }
-  //     console.log("find looped");
-  //   });
-  //   !alreadyInCart && setCart([...cart, cartItem]);
-  //   setCartTotal(cart.reduce((acc, curr) => acc + curr.qty * curr.price, 0));
-  //   setCartTotalItems(cart.length);
-  // };
-
-  const addToCart = (cartItem: CartItem) => {
-    const newCart = [...cart, cartItem];
-    setCart(newCart);
-    setCartTotal(newCart.reduce((acc, curr) => acc + curr.price, 0));
-    setCartTotalItems(newCart.reduce((acc, curr) => acc + curr.qty, 0));
+  const addToCart = (cartItem: CartItem, qty: number) => {
+    for (let i = 0; i < qty; i++) {
+      setCart((prevCart) => [...prevCart, cartItem]);
+      setCartTotal((prevTotal) => prevTotal + cartItem.price);
+      setCartTotalItems((prevTotal) => prevTotal + 1);
+    }
   };
 
   const removeFromCart = (cartItem: CartItem) => {
     const newCart = cart.filter((item) => item.id !== cartItem.id);
     setCart(newCart);
-    setCartTotal(newCart.reduce((acc, curr) => acc + curr.qty * curr.price, 0));
+    setCartTotal(newCart.reduce((acc, curr) => acc * curr.price, 0));
     setCartTotalItems(newCart.length);
   };
 
