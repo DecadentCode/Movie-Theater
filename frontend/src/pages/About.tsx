@@ -8,22 +8,35 @@ const About = () => {
         This is a simple app for a drive-in theatre. The BackEnd uses Spring
         Boot and MySQL. The FrontEnd uses React, TypeScript, and CSS.
       </p>
-      <h2>Andrew Cyburt</h2>
-      <img src="../assets/andrew.jpg" />
-      <p>Andrew</p>
 
-      <h2>Andrea Godoshian</h2>
-      <img src="../assets/andrea.jpg" />
-      <p>
-        Andrea is a software developer with a passion for creating web
-        applications.
-      </p>
+      <div className="AboutPerson">
+        <h2>Andrew Cyburt</h2>
+        {/* <img src="../assets/andrew.jpg" /> */}
+        <p>
+          Andrew was the Team Lead. He managed the repo, organized the workflow,
+          and handled most of the FrontEnd.
+          <br />
+          <br />
+          Andrew has a passion for coding, technology, and people.
+        </p>
+      </div>
 
-      <h2>Duncan Clotfelter</h2>
-      <p>
-        Duncan is a software developer with a passion for creating web
-        applications.
-      </p>
+      <div className="AboutPerson">
+        <h2>Andrea Godoshian</h2>
+        {/* <img src={`./frontend/src/assets/andrea.jpg`} alt="Team member Andrea" /> */}
+        <p>
+          Andrea is a software developer with a passion for creating web
+          applications.
+        </p>
+      </div>
+
+      <div className="AboutPerson">
+        <h2>Duncan Clotfelter</h2>
+        <p>
+          Duncan is a software developer with a passion for creating web
+          applications.
+        </p>
+      </div>
     </div>
   );
 };

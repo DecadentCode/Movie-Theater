@@ -1,13 +1,15 @@
 import { ReactNode, useEffect, useState } from "react";
 import CartItem from "../models/CartItem";
-import { getProfile } from "../services/AccountService";
+import { getAllPurchases, getProfile } from "../services/AccountService";
 import CartContext from "./CartContext";
 
 const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [oldCart, setOldCart] = useState<CartItem[]>([]);
   const [cartTotal, setCartTotal] = useState(0);
   const [cartTotalItems, setCartTotalItems] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [purchaseHistory, setPurchaseHistory] = useState<string[]>([]);
 
   // const addToCart = (cartItem: CartItem) => {
   //   let alreadyInCart: boolean = false;
@@ -40,6 +42,7 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clearCart = () => {
+    setOldCart(cart);
     setCart([]);
     setCartTotal(0);
     setCartTotalItems(0);
@@ -51,15 +54,21 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     getProfile().then((profile) => {
       setIsLoggedIn(profile !== null);
     });
+    getAllPurchases().then((purchases) => {
+      setPurchaseHistory(purchases);
+      console.log(purchases);
+    });
   }, [cart]);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        oldCart,
         cartTotal,
         cartTotalItems,
         isLoggedIn,
+        purchaseHistory,
         addToCart,
         removeFromCart,
         clearCart,
