@@ -2,10 +2,15 @@ import './PaypalButton.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PaypalExpressBtn from 'react-paypal-express-checkout';
+import { useContext } from 'react';
+import cartContext from '../context/CartContext';
 
 const PaypalButton = (props) => {
+    const { cartTotal, clearCart } = useContext(cartContext)
+    const finalCost = cartTotal.toFixed(2);
     const navigate = useNavigate();
     const onSuccess = (payment) => {
+        clearCart();
         console.log(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
         axios.get(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`)
             .then(res => {
@@ -30,7 +35,7 @@ const PaypalButton = (props) => {
 
     let env = 'sandbox'; // you can set here to 'production' for production
     let currency = 'USD'; // or you can set this value from your props or state
-    let total = 10.00; // same as above, this is the total amount (based on currency) to be paid by using Paypal express checkout
+    let total = `${finalCost}`; // same as above, this is the total amount (based on currency) to be paid by using Paypal express checkout
     // Document on Paypal's currency code: https://developer.paypal.com/docs/classic/api/currency_codes/
 
     const client = {

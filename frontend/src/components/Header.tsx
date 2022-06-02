@@ -31,15 +31,15 @@ const Header = () => {
             <button onClick={logoutHandler} id="signOut">
               Logout
             </button>
+            <Link to="/cart" className="navLink">
+              <span className="material-symbols-outlined">local_mall</span>
+            </Link>
           </>
         ) : (
           <Link to="/signin" className="navLink">
             Login
           </Link>
         )}
-        <Link to="/cart" className="navLink">
-          <span className="material-symbols-outlined">local_mall</span>
-        </Link>
       </nav>
     </div>
   );

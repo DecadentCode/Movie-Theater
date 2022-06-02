@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ShoppingCartDemo" />
         <module name="backend" />
-        <module name="backend-duncan" />
       </profile>
     </annotationProcessing>
   </component>
@@ -17,7 +16,6 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ShoppingCartDemo" options="-parameters" />
       <module name="backend" options="-parameters" />
-      <module name="backend-duncan" options="-parameters" />
     </option>
   </component>
 </project>

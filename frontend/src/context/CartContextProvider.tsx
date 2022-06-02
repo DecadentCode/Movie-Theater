@@ -9,20 +9,27 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [cartTotalItems, setCartTotalItems] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // const addToCart = (cartItem: CartItem) => {
+  //   let alreadyInCart: boolean = false;
+  //   cart.find((itemInCart, index) => {
+  //     if (itemInCart.id === cartItem.id) {
+  //       cart[index].qty += cartItem.qty;
+  //       cart[index].qty <= 0 && cart.splice(index, 1);
+  //       alreadyInCart = true;
+  //       return true;
+  //     }
+  //     console.log("find looped");
+  //   });
+  //   !alreadyInCart && setCart([...cart, cartItem]);
+  //   setCartTotal(cart.reduce((acc, curr) => acc + curr.qty * curr.price, 0));
+  //   setCartTotalItems(cart.length);
+  // };
+
   const addToCart = (cartItem: CartItem) => {
-    let alreadyInCart: boolean = false;
-    cart.find((itemInCart, index) => {
-      if (itemInCart.id === cartItem.id) {
-        cart[index].qty += cartItem.qty;
-        cart[index].qty <= 0 && cart.splice(index, 1);
-        alreadyInCart = true;
-        return true;
-      }
-      console.log("find looped");
-    });
-    !alreadyInCart && setCart([...cart, cartItem]);
-    setCartTotal(cart.reduce((acc, curr) => acc + curr.qty * curr.price, 0));
-    setCartTotalItems(cart.length);
+    const newCart = [...cart, cartItem];
+    setCart(newCart);
+    setCartTotal(newCart.reduce((acc, curr) => acc + curr.price, 0));
+    setCartTotalItems(newCart.reduce((acc, curr) => acc + curr.qty, 0));
   };
 
   const removeFromCart = (cartItem: CartItem) => {
@@ -41,10 +48,9 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     console.log("new item added to cart");
     console.log(cart);
-    if (getProfile.name) {
-      setIsLoggedIn(true);
-      console.log(getProfile.name);
-    }
+    getProfile().then((profile) => {
+      setIsLoggedIn(profile !== null);
+    });
   }, [cart]);
 
   return (

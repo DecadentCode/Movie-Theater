@@ -17,6 +17,7 @@ const Cart = () => {
           </li>
         ))}
       </ul>
+      <div>Total: ${cartTotal.toFixed(2)}</div>
 
       {checkout ? (
         <PayPalButton id={cart[0].name} />
