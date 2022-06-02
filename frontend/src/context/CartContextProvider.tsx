@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import CartItem from "../models/CartItem";
-import { getAllPurchases, getProfile } from "../services/AccountService";
+import { getProfile } from "../services/AccountService";
 import CartContext from "./CartContext";
 
 const CartContextProvider = ({ children }: { children: ReactNode }) => {
@@ -54,10 +54,6 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
     getProfile().then((profile) => {
       setIsLoggedIn(profile !== null);
     });
-    getAllPurchases().then((purchases) => {
-      setPurchaseHistory(purchases);
-      console.log(purchases);
-    });
   }, [cart]);
 
   return (
@@ -73,6 +69,7 @@ const CartContextProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         clearCart,
         setIsLoggedIn,
+        setPurchaseHistory,
       }}
     >
       {children}
