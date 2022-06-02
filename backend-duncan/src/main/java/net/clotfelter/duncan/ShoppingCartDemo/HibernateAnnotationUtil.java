@@ -2,7 +2,6 @@ package net.clotfelter.duncan.ShoppingCartDemo;
 
 import net.clotfelter.duncan.ShoppingCartDemo.entities.Cart;
 import net.clotfelter.duncan.ShoppingCartDemo.entities.products.*;
-import net.clotfelter.duncan.ShoppingCartDemo.entities.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -27,11 +26,7 @@ public class HibernateAnnotationUtil {
 
         Metadata metadata = new MetadataSources(serviceRegistry)
                 .addAnnotatedClass(Cart.class)
-                .addAnnotatedClass(Product.class)
-                .addAnnotatedClass(User.class)
                 .addAnnotatedClass(Ticket.class)
-                .addAnnotatedClass(Film.class)
-                // other domain classes
                 .getMetadataBuilder()
                 .build();
 

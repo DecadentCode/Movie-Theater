@@ -2,24 +2,32 @@ package net.clotfelter.duncan.ShoppingCartDemo.entities;
 
 import lombok.Data;
 import lombok.ToString;
-import net.clotfelter.duncan.ShoppingCartDemo.entities.products.Product;
+import net.clotfelter.duncan.ShoppingCartDemo.entities.products.Ticket;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.*;
 
 @Data
 @Entity
-@Table(name="carts")
+@Table(name="purchases")
 public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @ManyToMany @Fetch(FetchMode.JOIN)
+    private Set<Ticket> tickets = new HashSet<>();
 
-    @OneToMany(orphanRemoval = true)
-    private Set<Product> products = new HashSet<>();
+    @Column(name="user_id")
+    String userId;
+
+    @Id
+    @Column(name="payment_id")
+    String paymentId;
+
+    @Column(columnDefinition = "TEXT", name="payment_details")
+    String paymentDetails;
 
     @ToString.Include
-    double getTotal() {
-        return products.stream().mapToDouble(p -> (p.getPrice() * p.getQuantity())).reduce(0, Double::sum);
+    public double getTotal() {
+        return tickets.stream().mapToDouble(p -> (p.getPrice() * p.getUnits())).reduce(0, Double::sum);
     }
 }

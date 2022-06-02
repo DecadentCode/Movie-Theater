@@ -1,5 +1,6 @@
 package net.clotfelter.duncan.ShoppingCartDemo;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -16,30 +17,18 @@ public class ShoppingCartDemoApplication {
 	static ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
 	public static void main(String[] args) {
-		context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		SpringApplication.run(ShoppingCartDemoApplication.class, args);
-
-		var sessionFactory = HibernateAnnotationUtil.getSessionFactory();
-		var session = sessionFactory.getCurrentSession();
-		System.out.println("Session created");
-
-		var tx = session.beginTransaction();
-
-		session.saveOrUpdate(context.getBean("spiderman"));
-		session.saveOrUpdate(context.getBean("beeman"));
-		session.saveOrUpdate(context.getBean("batman"));
-
-		tx.commit();
 	}
 
 	@Bean
 	public static JavaMailSender getJavaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-		mailSender.setHost("smtp.gmail.com");
-		mailSender.setPort(587);
 
-		mailSender.setUsername("gensparkmovies@gmail.com");
-		mailSender.setPassword("password123genspark");
+		mailSender.setHost("smtp.mailtrap.io");
+		mailSender.setPort(2525);
+
+		mailSender.setUsername("8aefe52d1b0fed");
+		mailSender.setPassword("cd85f9714d3d51");
 
 		Properties props = mailSender.getJavaMailProperties();
 		props.put("mail.transport.protocol", "smtp");

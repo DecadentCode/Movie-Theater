@@ -3,13 +3,10 @@ package net.clotfelter.duncan.ShoppingCartDemo;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.clotfelter.duncan.ShoppingCartDemo.entities.Cart;
-import net.clotfelter.duncan.ShoppingCartDemo.entities.products.Film;
-import net.clotfelter.duncan.ShoppingCartDemo.entities.products.Product;
-import net.clotfelter.duncan.ShoppingCartDemo.entities.User;
 import net.clotfelter.duncan.ShoppingCartDemo.entities.products.Ticket;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,23 +16,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Column;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
 
-@CrossOrigin
 @RestController
 public class ShoppingController extends WebSecurityConfigurerAdapter {
     @Value("${paypal.client.id}")
@@ -47,17 +38,16 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
         http
                 .authorizeRequests(a -> a
-                        .antMatchers("/", "/*", "/error", "/webjars/**", "/index.html").permitAll()
-                        //.anyRequest().authenticated()
+                        .antMatchers("/", "/error", "/webjars/**", "/index.html").permitAll()
                 )
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .oauth2Login();
-        // @formatter:on
+
+        http.csrf().disable();
     }
 
     //Legacy
@@ -72,25 +62,22 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
     }
 
     @GetMapping("/api/myfilms")
-    public List getUserTickets() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            return null;
-        }
+    public List getUserTickets(@AuthenticationPrincipal OAuth2User principal) {
         List<String[]> toReturn = new ArrayList<>();
         try (var session = HibernateAnnotationUtil.getSessionFactory().getCurrentSession()) {
             session.beginTransaction();
-            Criteria criteria = session.createCriteria(Ticket.class);
-            criteria.add(Restrictions.like("user", authentication.getName()));
-            return criteria.list().stream().map(t -> getTicketData((Ticket)t)).toList();
+            Query query = session.createQuery("FROM Cart WHERE user_id = :uid");
+            query.setParameter("uid", principal.getName());
+            List<Ticket> tickets = new ArrayList<>();
+            for(Object o : query.list()) {
+                if(o instanceof Cart c) {
+                    tickets.addAll(c.getTickets());
+                }
+            }
+            //Sure would be nice if this worked, wouldn't it, Hibernate?
+            //return query.list().stream().flatMap(c -> ((Cart)c).getTickets()).toList();
+            return tickets;
         }
-    }
-
-    private String[] getTicketData(Ticket t) {
-        return new String[] {
-                t.getFilm(),
-                String.valueOf(t.getUnits())
-        };
     }
 
     @GetMapping("/api/user")
@@ -98,17 +85,48 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         return principal == null ? "null" : principal.getAttributes().toString();
     }
 
-    //TODO send current user ID in purchase data
-    @CrossOrigin
+    @PostMapping("/api/confirmpurchase")
+    public String confirmPurchasePost(@RequestBody Cart c, @AuthenticationPrincipal OAuth2User principal) {
+        try {
+            c.setUserId(principal.getName());
+            String paypalOfficialDetails = getPaymentJson(JsonParser.parseString(c.getPaymentDetails()).getAsJsonObject().get("paymentID").getAsString(), c.getTotal());
+            if (paypalOfficialDetails == null) {
+                return purchaseError();
+            }
+            c.setPaymentDetails(paypalOfficialDetails);
+
+            //Save payment
+            try (var session = HibernateAnnotationUtil.getSessionFactory().getCurrentSession()) {
+                var tx = session.beginTransaction();
+                for(Ticket t : c.getTickets()) {
+                    session.saveOrUpdate(t);
+                }
+                session.save(c);
+                tx.commit();
+            }
+        } catch(Exception e) {e.printStackTrace(); return purchaseError();}
+
+        sendReceipt(principal.getAttribute("email"));
+        return "Thanks for your purchase!";
+    }
+
+    //Legacy, only supports 1 ticket, changed to POST
+    @Deprecated
     @GetMapping("/api/confirmpurchase")
-    public String confirmPurchase(@RequestParam String payment, @RequestParam String show,
-                                  @RequestParam String time, @RequestParam int units, @AuthenticationPrincipal OAuth2User principal) {
+    public String confirmPurchase(@RequestParam String payment, @RequestParam String show, @AuthenticationPrincipal OAuth2User principal) {
+        String paymentJson = getPaymentJson(payment, 10);
+        return paymentJson != null ?
+            completePurchase(paymentJson, payment, show, principal.getAttribute("email")) :
+            purchaseError();
+    }
+
+    private String getPaymentJson(String paymentId, double requiredCurrency) {
         try {
             String encoding = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
             var client = HttpClient.newHttpClient();
 
             var request = HttpRequest.newBuilder(
-                            URI.create("https://api-m.sandbox.paypal.com/v1/payments/payment/" + payment))
+                            URI.create("https://api-m.sandbox.paypal.com/v1/payments/payment/" + paymentId))
                     .header("accept", "application/json")
                     .header(HttpHeaders.AUTHORIZATION, "Basic " + encoding)
                     .build();
@@ -116,30 +134,29 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
             var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if(response.statusCode() < 200 || response.statusCode() >= 300) {
-                return purchaseError();
+                return null;
             }
 
             JsonObject jsonObject = JsonParser.parseString(response.body()).getAsJsonObject();
 
-            System.out.println((String)principal.getAttribute("email"));
-            if(!validPurchase(jsonObject)) {
-                return purchaseError();
-            } else {
-                return completePurchase(response.body(), payment, show, principal.getAttribute("email"));
+            if (
+                    jsonObject.get("state").getAsString().equals("approved")
+                &&  jsonObject.get("transactions").getAsJsonArray().get(0).getAsJsonObject().get("amount").getAsJsonObject().get("total").getAsDouble() == requiredCurrency
+            ) {
+                return response.body();
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-            return purchaseError();
-        }
+        } catch(Exception e) {e.printStackTrace();}
+        return null;
     }
 
+    @Deprecated
     private String completePurchase(String json, String paymentId, String filmId, String email) {
         var session = HibernateAnnotationUtil.getSessionFactory().getCurrentSession();
         var tx = session.beginTransaction();
         //Film toWatch = session.get(Film.class, filmId);
 
         Ticket soldTicket = new Ticket();
-        soldTicket.setId(paymentId);
+        soldTicket.setMoviedbId(paymentId);
         soldTicket.setFilm(filmId);
         soldTicket.setUnits(1);
         soldTicket.setUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -148,29 +165,26 @@ public class ShoppingController extends WebSecurityConfigurerAdapter {
         session.saveOrUpdate(soldTicket);
         tx.commit();
 
+        sendReceipt(email);
+        return "Thanks for your purchase!";
+    }
+
+    public static boolean sendReceipt(String recipient) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("gensparkmovies@gmail.com");
-            message.setTo(email);
+            message.setFrom("colonialdrivein@yahoo.com");
+            message.setTo(recipient);
             message.setSubject("Thank you for your purchase!");
             message.setText("Don't forget to collect your free popcorn! It's on the house!");
             ShoppingCartDemoApplication.getJavaMailSender().send(message);
-        } catch(Exception e) {e.printStackTrace();}
-
-        return "Thanks for your purchase!";//TODO template
-    }
-
-    //TODO more validation
-    private boolean validPurchase(JsonObject purchase) {
-        return (
-                purchase.get("state").getAsString().equals("approved")
-        );
+        } catch(Exception e) {e.printStackTrace(); return false;}
+        return true;
     }
 
     //TODO template
     @GetMapping("/error")
     private String purchaseError() {
-        return "We are sorry, but there was an issue validating your purchase. Please try again, or contact us <a href='http://localhost:8080/contactus'>here</a>";
+        return "We are sorry, but there was an issue validating your purchase. Please contact us to resolve the issue.";
     }
 
     /*
