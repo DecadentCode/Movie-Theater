@@ -1,1 +1,3 @@
 node_modules
+backend-duncan/src/main/resources/hibernate-annotation.cfg.xml
+backend-duncan/src/main/resources/hibernate-annotation.cfg.xml
