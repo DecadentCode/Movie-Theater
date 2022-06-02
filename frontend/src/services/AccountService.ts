@@ -6,3 +6,10 @@ export const getProfile = () => {
     return response.data;
   });
 };
+
+export const getAllPurchases = () => {
+  return axios.get(`http://localhost:8080/api/myfilms`).then((response) => {
+    console.log(response.data);
+    return response.data;
+  });
+};
