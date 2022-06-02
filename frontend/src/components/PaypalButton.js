@@ -7,16 +7,24 @@ import cartContext from '../context/CartContext';
 
 const PaypalButton = (props) => {
     const { cartTotal, clearCart } = useContext(cartContext)
+    const baseURL = process.env.REACT_APP_API_URL || "";
     const finalCost = cartTotal.toFixed(2);
     const navigate = useNavigate();
     const onSuccess = (payment) => {
         clearCart();
-        console.log(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
-        axios.get(`http://localhost:8080/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`)
-            .then(res => {
-                alert(res.data);
-            })
-        // window.location.assign(`http://localhost:8080/api/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
+        console.log(props.tickets)
+        axios.post(`${baseURL}/api/confirmpurchase`, {
+            paymentId: payment['paymentID'],
+            paymentDetails: JSON.stringify(payment),
+            tickets: JSON.stringify(props.tickets),
+            // tickets: [{
+            //     moviedbId: "ooga",
+            //     units: 2,
+            //     showTime: "12:00"
+            // }
+            // ]
+        })
+        // window.location.assign(`${baseURL}/api/confirmpurchase?payment=${payment['paymentID']}&show=${props['id']}`);
         navigate(`/checkout`);
     }
 

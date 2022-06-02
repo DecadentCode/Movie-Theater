@@ -1,13 +1,15 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CartContext from "../context/CartContext";
 import "./Header.css";
 
 const Header = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(CartContext);
+  const navigate = useNavigate();
 
   const logoutHandler = () => {
     setIsLoggedIn(false);
+    navigate("/");
   };
 
   return (

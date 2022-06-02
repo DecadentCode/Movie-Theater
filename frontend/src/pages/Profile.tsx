@@ -9,7 +9,6 @@ const Profile = () => {
   useEffect(() => {
     getAllPurchases().then((purchases) => {
       setPurchaseHistory(purchases);
-      console.log(purchases);
     });
   }, [setPurchaseHistory]);
 

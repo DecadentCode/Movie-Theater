@@ -13,14 +13,14 @@ const Cart = () => {
       <ul>
         {cart.map((item) => (
           <li key={item.id}>
-            {item.name} - x{item.qty} - ${item.price * item.qty}
+            {item.name} - ${item.price}
           </li>
         ))}
       </ul>
       <div>Total: ${cartTotal.toFixed(2)}</div>
 
       {checkout ? (
-        <PayPalButton id={cart[0].name} />
+        <PayPalButton cartItems={cart} />
       ) : (
         <button
           onClick={() => {
