@@ -22,6 +22,9 @@ const Header = () => {
 
         {isLoggedIn ? (
           <>
+            <Link to="/profile" className="navLink">
+              Profile
+            </Link>
             <button onClick={logoutHandler} id="signOut">
               Logout
             </button>

@@ -1,9 +1,18 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import CartContext from "../context/CartContext";
+import { getAllPurchases } from "../services/AccountService";
 import "./Profile.css";
 
 const Profile = () => {
-  const { purchaseHistory } = useContext(CartContext);
+  const { purchaseHistory, setPurchaseHistory } = useContext(CartContext);
+
+  useEffect(() => {
+    getAllPurchases().then((purchases) => {
+      setPurchaseHistory(purchases);
+      console.log(purchases);
+    });
+  }, [setPurchaseHistory]);
+
   return (
     <div className="Profile">
       <h1>Profile</h1>

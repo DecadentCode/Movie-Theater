@@ -12,6 +12,7 @@ export interface CartContext {
   removeFromCart: (item: CartItem) => void;
   clearCart: () => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
+  setPurchaseHistory: (purchaseHistory: string[]) => void;
 }
 
 const defaultValue: CartContext = {
@@ -25,6 +26,7 @@ const defaultValue: CartContext = {
   removeFromCart: () => {},
   clearCart: () => {},
   setIsLoggedIn: () => {},
+  setPurchaseHistory: () => {},
 };
 
 const cartContext = createContext(defaultValue);
